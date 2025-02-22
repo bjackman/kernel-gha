@@ -1,3 +1,6 @@
 [submodule "linux"]
 	path = linux
 	url = git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+[submodule "virtme-ng"]
+	path = virtme-ng
+	url = https://github.com/arighi/virtme-ng
