@@ -16,7 +16,7 @@ jobs:
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
-        uses: arch/x86/boot/bzImage
+        uses: tecolicom/actions-use-apt-tools@v1
         with:
           tools: apparmor debian-archive-keyrying
 
