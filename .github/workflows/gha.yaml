@@ -72,7 +72,7 @@ jobs:
       - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-build
+          name: kernel
           path: build/
 
   test:
