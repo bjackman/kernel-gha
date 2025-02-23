@@ -91,6 +91,13 @@ jobs:
           name: rootfs
           path: build/rootfs
 
+      # GHA freaks out if we try to upload the rootfs as a directory so at the
+      # moment it's a tarball. So extract it.
+      - name: Download rootfs artifact
+        run: |
+          mkdir -p rootfs/image
+          tar -C rootfs/image  --zstd -xf rootfs/image.tar.zst
+
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
         with:
