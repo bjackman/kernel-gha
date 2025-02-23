@@ -46,7 +46,7 @@ jobs:
         run: |
           git submodule foreach --recursive 'git rev-parse HEAD' \
             | sort | sha256sum | awk '{print $1}' > submodule_hash.txt
-          echo "::set-output name=hash::$(cat submodule_hash.txt)"
+          echo "name=hash::$(cat submodule_hash.txt)" >> $GITHUB_OUTPUT
 
       # This might seem pointless coz typically we should expect the kernel
       # version to change between runs (otherwise why are we running again?)
