@@ -67,7 +67,7 @@ jobs:
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: |
           sudo apt update && sudo apt install \
-            build-essential libnuma-dev libcap-dev
+            build-essential libnuma-dev libcap-dev \
             ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
       - name: Build
