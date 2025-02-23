@@ -1,7 +1,7 @@
 on:
   # Run this workflow after the kernel submodule gets updated by the other workflow.
   workflow_run:
-    workflows: ["update-submodule"]
+    workflows: ["Update kernel submodule"]
     types:
       - completed
   push:
