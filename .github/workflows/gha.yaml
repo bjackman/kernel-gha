@@ -26,7 +26,12 @@ jobs:
           version: 2
 
       - name: Build rootfs
-        run: mkosi/bin/mkosi
+        run: |
+          # Enable mkosi to do userns stuff
+          sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+          sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+          mkosi/bin/mkosi
 
       - name: Build kernel
         run: |
