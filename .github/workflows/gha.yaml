@@ -21,16 +21,11 @@ jobs:
 
       - name: Build rootfs
         run: |
-          # Enable mkosi to do userns stuff
-          # https://github.com/actions/runner-images/issues/10015#issuecomment-2668163375
-          sudo systemctl disable --now apparmor.service
-          sudo aa-teardown || true
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
           # Produce the rootfs in build/rootfs
-          sudo mkosi/bin/mkosi -C rootfs
-
-          # Fix permissions so the upload works
-          sudo find . -type f -exec chmod a+r {} + -o -type d -exec chmod a+rx {} +
+          mkosi/bin/mkosi -C rootfs
 
       - name: Upload rootfs artifact
         uses: actions/upload-artifact@v4
