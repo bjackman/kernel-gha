@@ -3,7 +3,7 @@ on: [push]
 # TODO: Automatically update the kernel submodul
 name: Linux mm selftests in virtme-ng
 jobs:
-  build:
+  build-rootfs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code with submodules
@@ -11,23 +11,13 @@ jobs:
         with:
           submodules: true
 
-      # Install dependencies for virtme-ng
-      - name: Install apt packages
+      - name: Install apt packages for mkosi
+        id: apt-mkosi
         uses: awalsh128/cache-apt-pkgs-action@v1
         with:
-          # First group is kernel deps. Second is virtme-ng dep.
-          # apparmor is for the aa-teardown thing below.
-          # WARNING: When you change this, you need to manually update the
-          # version field below.
           packages: |
-            build-essential libnuma-dev libcap-dev
-            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
-
-            qemu-kvm udev iproute2 qemu-system-x86 python3-requests
-            coreutils libvirt-clients kbd kmod file rsync zstd udev
-
             apparmor
-          version: 3
+          version: 1
 
       - name: Build rootfs
         run: |
@@ -38,6 +28,29 @@ jobs:
 
           # Produce the rootfs in build/rootfs
           sudo mkosi/bin/mkosi --output-directory build --output rootfs
+
+      - name: Upload rootfs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rootfs
+          path: build/rootfs
+
+  build-kernel:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install apt packages for kernel build
+        id: apt-kernel
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: |
+            build-essential libnuma-dev libcap-dev
+            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
+          version: 3
 
       - name: Hash all submodule versions
         id: submodule_hash
@@ -60,9 +73,15 @@ jobs:
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: ./build.sh
 
+      - name: Upload kernel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-build
+          path: build/
+
   test:
     runs-on: ubuntu-24.04
-    needs: build
+    needs: [build-rootfs, build-kernel]
     steps:
       - name: Checkout virtme-ng
         uses: actions/checkout@v4
@@ -70,11 +89,26 @@ jobs:
           submodules: true
           sparse-checkout: virtme-ng/
 
+      - name: Download rootfs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: rootfs
+          path: build/rootfs
+
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
         with:
           name: kernel-build
           path: build/
+
+      - name: Install runtime dependencies
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        id: apt-vng
+        with:
+          packages: |
+            qemu-kvm udev iproute2 qemu-system-x86 python3-requests
+            coreutils libvirt-clients kbd kmod file rsync zstd udev
+          version: 3
 
       - name: Run selftests via virtme-ng
         run: |
