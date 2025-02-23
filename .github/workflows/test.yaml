@@ -1,6 +1,9 @@
 on: [push]
 # TODO: Run build steps in parallel?
-# TODO: Automatically update the kernel submodul
+# TODO: Nice way to reproduce.
+# TODO: Document how everything fits together.
+# TODO: Add more tests.
+# TODO: Parse KTAP and display something more readable using `$GITHUB_STEP_SUMMARY`.
 name: Linux mm selftests in virtme-ng
 jobs:
   build-rootfs:
@@ -111,5 +114,3 @@ jobs:
 
       - name: Run selftests via virtme-ng
         run: ./test.sh
-
-      # TODO: Create reproducer command with artifacts
