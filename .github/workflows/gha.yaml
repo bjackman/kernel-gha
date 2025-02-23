@@ -3,29 +3,25 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code with submodules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
-      - name: Wake up apt
-        run: apt update
-
-      - name: Cache apt dependencies
-        uses: actions/cache@v2
+      # Install dependencies for virtme-ng
+      - uses: awalsh128/cache-apt-pkgs-action@v1
         with:
-          path: /tmp/apt-cache
-          key: ${{ runner.os }}-apt-cache-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-apt-cache-
+          packages: |
+            build-essential libnuma-dev libcap-dev
+            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
-      - name: Install dependencies
-        run: apt install -y podman
+            qemu-kvm udev iproute2 qemu-system-x86 python3-requests
+            coreutils libvirt-clients kbd kmod file rsync zstd udev
 
-      # TODO: I think this has gotta be dumb, surely we can just have GHA run
-      # the container directly.
-      - name: Run the container
-        run: podman run --rm --mount=type=bind,source=${{ github.workspace }},destination=/src kgha /src/run.sh
+      - name: "Build kernel"
+        run: |
+          cd linux/
+          ../virtme-ng/vng -b
