@@ -58,8 +58,8 @@ jobs:
       - name: Build kernel
         run: |
           mkdir build
-          cd linux/
-          ../virtme-ng/vng -b O=build
+          make -j mrproper
+          ../virtme-ng/vng -b O=$GITHUB_WORKSPACE/build
 
       - name: Build mm selftests
         run: |
@@ -67,7 +67,7 @@ jobs:
           # -static is a simple way to workaround differences in the shared
           # library environment between host & guest.
           make -j $(( $(nproc) * 2 )) -C tools/testing/selftests \
-            TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static O=build install
+            TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static O=$GITHUB_WORKSPACE/build install
 
       - name: Run selftests via virtme-ng
         run: |
