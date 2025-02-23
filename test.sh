@@ -8,7 +8,10 @@ tar -C image  --zstd -xf image.tar.zst
 mkdir -p kernel
 tar -C kernel  -zxf kernel.tgz
 
+mkdir -p kselftests
+tar -C kselftests  -zxf kselftests.tgz
+
 unshare -r virtme-ng/vng --verbose \
     --root image --user root --run kernel/vmlinuz \
-    --rwdir=/mnt=kernel/kselftest/kselftest_install -- \
+    --rwdir=/mnt=kselftests/kselftest_install -- \
         "cd /mnt/mm; ./run_vmtests.sh -t mmap"
