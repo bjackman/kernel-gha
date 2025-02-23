@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-          sparse-checkout: "mkosi.*"
+          sparse-checkout: mkosi/ rootfs/
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
@@ -28,13 +28,13 @@ jobs:
           sudo aa-teardown || true
 
           # Produce the rootfs in build/rootfs
-          sudo mkosi/bin/mkosi --output-directory build --output rootfs
+          sudo mkosi/bin/mkosi -C rootfs
 
       - name: Upload rootfs artifact
         uses: actions/upload-artifact@v4
         with:
           name: rootfs
-          path: build/rootfs
+          path: rootfs
 
   build-kernel:
     runs-on: ubuntu-24.04
