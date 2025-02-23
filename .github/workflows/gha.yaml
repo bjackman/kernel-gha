@@ -6,13 +6,13 @@ jobs:
   build-rootfs:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code with submodules
+      - name: Checkout code without submodules
         uses: actions/checkout@v4
         with:
-          submodules: true
-          sparse-checkout: |
-            mkosi/
-            rootfs/
+          submodules: false
+
+      - name: Checkout mkosi
+        run: git submodule update mkosi/
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
@@ -79,11 +79,12 @@ jobs:
     runs-on: ubuntu-24.04
     needs: [build-rootfs, build-kernel]
     steps:
-      - name: Checkout virtme-ng
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          submodules: true
-          sparse-checkout: virtme-ng/
+          submodules: false
+
+      - name: Checkout virtme-ng
+        run: git submodule update virtme-ng/
 
       - name: Download rootfs artifact
         uses: actions/download-artifact@v4
@@ -96,7 +97,7 @@ jobs:
       - name: Download rootfs artifact
         run: |
           mkdir -p rootfs/image
-          tar -C rootfs/image  --zstd -xf rootfs/image.tar.zst
+          tar -C build/rootfs/image  --zstd -xf build/rootfs/image.tar.zst
 
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
