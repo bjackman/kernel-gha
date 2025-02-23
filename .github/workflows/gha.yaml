@@ -10,7 +10,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-          sparse-checkout: mkosi/ rootfs/
+          sparse-checkout: |
+            mkosi/
+            rootfs/
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
