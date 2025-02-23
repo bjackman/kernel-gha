@@ -92,13 +92,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: image.tar.zst
-          path: image.tar.zst
 
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
         with:
           name: kernel.tgz
-          path: kernel.tgz
 
       - name: Install runtime dependencies
         id: apt-vng
