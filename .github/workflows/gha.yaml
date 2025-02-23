@@ -108,14 +108,14 @@ jobs:
         id: apt-vng
         run: |
           sudo apt update && sudo apt install \
-            qemu-kvm udev iproute2 qemu-system-x86 python3-requests
+            qemu-kvm udev iproute2 qemu-system-x86 python3-requests \
             coreutils libvirt-clients kbd kmod file rsync zstd udev
 
       - name: Run selftests via virtme-ng
         run: |
           virtme-ng/vng --verbose \
             --root build/rootfs --user root --run build/vmlinuz \
-            --rwdir=/mnt=build/kselftest/kselftest_install --
+            --rwdir=/mnt=build/kselftest/kselftest_install -- \
               "cd /mnt/mm; ./run_vmtests.sh -t mmap"
 
       # TODO: Create reproducer command with artifacts
