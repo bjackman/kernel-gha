@@ -8,6 +8,6 @@ mkdir -p image
 tar -C image  --zstd -xf input-artifacts/rootfs/image.tar.zst
 
 unshare -r virtme-ng/vng --verbose \
-            --root image --user root --run input-artifacts/kernel/vmlinuz \
-            --rwdir=/mnt=input-artifacts/kernel/kselftest/kselftest_install -- \
-              "cd /mnt/mm; ./run_vmtests.sh -t mmap"
+    --root image --user root --run input-artifacts/kernel/vmlinuz \
+    --rwdir=/mnt=input-artifacts/kernel/kselftest/kselftest_install -- \
+        "cd /mnt/mm; ./run_vmtests.sh -t mmap"
