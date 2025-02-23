@@ -80,6 +80,12 @@ jobs:
     runs-on: ubuntu-24.04
     needs: build
     steps:
+      - name: Checkout virtme-ng
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          sparse-checkout: virtme-ng/
+
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
         with:
