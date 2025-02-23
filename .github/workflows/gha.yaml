@@ -34,7 +34,11 @@ jobs:
         run: |
           # Enable mkosi to do userns stuff
           # https://github.com/actions/runner-images/issues/10015#issuecomment-2668163375
-          sudo systemctl disable --now apparmor.service
+          # Only do this if it's active since in 'act' (local GHA runner) there
+          # is no systemd.
+          if [[ "$(systemctl is-active apparmor))" == true ]]; then
+            sudo systemctl disable --now apparmor.service
+          fi
           sudo aa-teardown || true
 
           mkosi/bin/mkosi
