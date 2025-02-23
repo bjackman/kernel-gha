@@ -1,0 +1,28 @@
+name: Update kernel submodule
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Nightly
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update submodule
+        run: |
+          git submodule update --remote --merge
+          git status
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && git diff --staged --quiet || (git commit -am "Update kernel to latest master" && git push)
