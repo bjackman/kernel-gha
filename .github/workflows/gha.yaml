@@ -24,7 +24,15 @@ jobs:
             coreutils libvirt-clients kbd kmod file rsync zstd udev
           version: 2
 
-      - name: "Build kernel"
+      - name: Build kernel
         run: |
           cd linux/
           ../virtme-ng/vng -b
+
+      - name: Build mm selftests
+        run: |
+          cd linux
+          make -j headers
+          # -static is a simple way to workaround differences in the shared
+          # library environment between host & guest.
+          make -j $(( $(nproc) * 2 )) -C tools/testing/selftests TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static install
