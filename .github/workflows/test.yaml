@@ -107,6 +107,11 @@ jobs:
             qemu-kvm udev iproute2 qemu-system-x86 python3-requests \
             coreutils libvirt-clients kbd kmod file rsync zstd udev
 
+      - name: Disable AppArmor noise
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
       - name: Run selftests via virtme-ng
         run: ./test.sh
 
