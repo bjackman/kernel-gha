@@ -108,6 +108,6 @@ jobs:
             coreutils libvirt-clients kbd kmod file rsync zstd udev
 
       - name: Run selftests via virtme-ng
-        run: |
+        run: ./test.sh
 
       # TODO: Create reproducer command with artifacts
