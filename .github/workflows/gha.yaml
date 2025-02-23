@@ -51,12 +51,14 @@ jobs:
       # version to change between runs (otherwise why are we running again?)
       # But it's useful for hacking on this config.
       - name: Cache/restore kernel build
+        id: cache-kernel-build
         uses: actions/cache@v4
         with:
           path: build
           key: ${{ runner.os }}-dependencies-${{ steps.submodule_hash.outputs.hash }}
 
       - name: Build kernel
+        if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: |
           mkdir build
           ../virtme-ng/vng -b O=build
