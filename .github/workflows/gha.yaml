@@ -63,8 +63,9 @@ jobs:
 
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
-        run: |
-          apt install \
+        uses: tecolicom/actions-use-apt-tools@v1
+        with:
+          tools: |
             build-essential libnuma-dev libcap-dev
             ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
@@ -101,9 +102,10 @@ jobs:
           path: build/
 
       - name: Install runtime dependencies
+        uses: tecolicom/actions-use-apt-tools@v1
         id: apt-vng
-        run: |
-          apt install \
+        with:
+          tools: |
             qemu-kvm udev iproute2 qemu-system-x86 python3-requests
             coreutils libvirt-clients kbd kmod file rsync zstd udev
 
