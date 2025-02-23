@@ -20,7 +20,8 @@ jobs:
         with:
           packages: |
             apparmor
-          version: 1
+            debian-archive-keyrying
+          version: 2
 
       - name: Build rootfs
         run: |
