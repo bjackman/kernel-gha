@@ -41,7 +41,7 @@ jobs:
           fi
           sudo aa-teardown || true
 
-          mkosi/bin/mkosi
+          sudo mkosi/bin/mkosi
 
       - name: Build kernel
         run: |
