@@ -1,4 +1,13 @@
-on: [push]
+on:
+  # Run this workflow after the kernel submodule gets updated by the other workflow.
+  workflow_run:
+    workflows: ["update-submodule"]
+    types:
+      - completed
+  push:
+    branches:
+      - master
+
 # TODO: Run build steps in parallel?
 # TODO: Nice way to reproduce.
 # TODO: Document how everything fits together.
