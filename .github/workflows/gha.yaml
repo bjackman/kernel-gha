@@ -29,6 +29,9 @@ jobs:
           # Produce the rootfs in build/rootfs
           sudo mkosi/bin/mkosi -C rootfs
 
+          # Fix permissions so the upload works
+          sudo find . -type f -exec chmod a+r {} + -o -type d -exec chmod a+rx {} +
+
       - name: Upload rootfs artifact
         uses: actions/upload-artifact@v4
         with:
