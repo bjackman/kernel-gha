@@ -6,13 +6,13 @@ jobs:
   build-rootfs:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code without submodules
+      - name: Checkout code with submodules
         uses: actions/checkout@v4
         with:
-          submodules: false
-
-      - name: Checkout mkosi
-        run: git submodule update --init mkosi/
+          submodules: true
+          sparse-checkout: |
+            mkosi/
+            rootfs/
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
@@ -36,15 +36,16 @@ jobs:
   build-kernel:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code without submodules
+      - name: Checkout code with submodules
         uses: actions/checkout@v4
         with:
-          submodules: false
+          submodules: true
 
       - name: Hash all submodule versions
         id: submodule_hash
         run: |
-          git submodule | sha256sum | awk '{print $1}' > submodule_hash.txt
+          git submodule foreach --recursive 'git rev-parse HEAD' \
+            | sort | sha256sum | awk '{print $1}' > submodule_hash.txt
           echo "::set-output name=hash::$(cat submodule_hash.txt)"
 
       # This might seem pointless coz typically we should expect the kernel
@@ -56,10 +57,6 @@ jobs:
         with:
           path: build
           key: ${{ runner.os }}-dependencies-${{ steps.submodule_hash.outputs.hash }}-${{ hashFiles('build.sh') }}
-
-      - name: Checkout code
-        if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
-        run: git submodule update --init
 
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
@@ -75,19 +72,18 @@ jobs:
       - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: kernel-build
           path: build/
 
   test:
     runs-on: ubuntu-24.04
     needs: [build-rootfs, build-kernel]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: false
-
       - name: Checkout virtme-ng
-        run: git submodule update --init virtme-ng/
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          sparse-checkout: virtme-ng/
 
       - name: Download rootfs artifact
         uses: actions/download-artifact@v4
