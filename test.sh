@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eux
+
 mkdir -p image
 tar -C image  --zstd -xf image.tar.zst
 

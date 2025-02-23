@@ -23,4 +23,4 @@ make -j $(( $(nproc) * 2 )) -C linux/tools/testing/selftests \
     TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static O=$PWD/build install
 
 # Github breaks file permissions so tar everything up
-tar czf kernel.tgz build
+tar czf kernel.tgz -C build .
