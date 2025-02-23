@@ -1,7 +1,8 @@
 
-name: Linux mm selftests in virtme-ng
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+# TODO: Run build steps in parallel?
+# TODO: Automatically update the kernel submodul
+name: Linux mm selftests in virtme-ng
 jobs:
   test:
     runs-on: ubuntu-latest
