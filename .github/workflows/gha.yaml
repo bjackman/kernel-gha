@@ -13,7 +13,8 @@ jobs:
           submodules: true
 
       # Install dependencies for virtme-ng
-      - uses: awalsh128/cache-apt-pkgs-action@v1
+      - name: Install apt packages
+        uses: awalsh128/cache-apt-pkgs-action@v1
         with:
           # First group is kernel deps. Second is virtme-ng dep.
           # apparmor is for the aa-teardown thing below.
