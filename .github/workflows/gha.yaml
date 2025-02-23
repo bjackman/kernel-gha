@@ -61,7 +61,7 @@ jobs:
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: |
           mkdir -p build
-          ../virtme-ng/vng -b O=build
+          virtme-ng/vng -b O=build
 
       - name: Build mm selftests
         run: |
