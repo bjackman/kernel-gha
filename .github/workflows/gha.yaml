@@ -17,7 +17,10 @@ jobs:
       - name: Install apt packages for mkosi
         id: apt-mkosi
         run: |
-          sudo apt update && sudo apt install apparmor debian-archive-keyrying
+          sudo apt update && sudo apt install apparmor
+          wget -O debian-archive-keyring.deb \
+            http://ftp.us.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2023.3+deb12u1_all.deb
+          sudo dpkg -i debian-archive-keyring.deb
 
       - name: Build rootfs
         run: |
