@@ -17,7 +17,7 @@ jobs:
       - name: Install apt packages for mkosi
         id: apt-mkosi
         run: |
-          apt update && apt install apparmor debian-archive-keyrying
+          sudo apt update && sudo apt install apparmor debian-archive-keyrying
 
       - name: Build rootfs
         run: |
@@ -63,7 +63,7 @@ jobs:
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: |
-          apt update && apt install \
+          sudo apt update && sudo apt install \
             build-essential libnuma-dev libcap-dev
             ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
@@ -102,7 +102,7 @@ jobs:
       - name: Install runtime dependencies
         id: apt-vng
         run: |
-          apt update && apt install \
+          sudo apt update && sudo apt install \
             qemu-kvm udev iproute2 qemu-system-x86 python3-requests
             coreutils libvirt-clients kbd kmod file rsync zstd udev
 
