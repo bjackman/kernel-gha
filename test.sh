@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Runs the tests. Artifacts should be in the current directory under
-# input-artifacts/rootfs/ and input-artifacts/kernel/
-
 mkdir -p image
+tar -C image  --zstd -xf image.tar.zst
 
-tar -C image  --zstd -xf input-artifacts/rootfs/image.tar.zst
+mkdir -p kernel
+tar -C kernel  -zxf kernel.tgz
 
 unshare -r virtme-ng/vng --verbose \
     --root image --user root --run input-artifacts/kernel/vmlinuz \

@@ -2,3 +2,5 @@
 image
 build
 input-artifacts/
+kernel.tgz
+image.tar.zst

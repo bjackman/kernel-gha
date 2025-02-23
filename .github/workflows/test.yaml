@@ -25,13 +25,13 @@ jobs:
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
           # Produce the rootfs in build/rootfs
-          mkosi/bin/mkosi -C rootfs
+          mkosi/bin/mkosi -C rootfs --output-directory=$PWD
 
       - name: Upload rootfs artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rootfs
-          path: rootfs
+          name: image.tar.zst
+          path: image.tar.zst
 
   build-kernel:
     runs-on: ubuntu-24.04
@@ -72,8 +72,8 @@ jobs:
       - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kernel
-          path: build/
+          name: kernel.tgz
+          path: kernel.tgz
 
   test:
     runs-on: ubuntu-24.04
@@ -91,14 +91,14 @@ jobs:
       - name: Download rootfs artifact
         uses: actions/download-artifact@v4
         with:
-          name: rootfs
-          path: input-artifacts/rootfs
+          name: image.tar.zst
+          path: image.tar.zst
 
       - name: Download kernel build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: kernel
-          path: input-artifacts/kernel
+          name: kernel.tgz
+          path: kernel.tgz
 
       - name: Install runtime dependencies
         id: apt-vng
