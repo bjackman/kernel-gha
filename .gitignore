@@ -4,3 +4,9 @@ build
 input-artifacts/
 kernel.tgz
 image.tar.zst
+kernel-build/
+kernel/
+kselftest/
+kselftests-build/
+kselftests.tgz
+kselftests/

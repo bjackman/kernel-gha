@@ -71,18 +71,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: kernel.tgz
-          key: ${{ runner.os }}-${{ steps.submodule_hash.outputs.hash }}-${{ hashFiles('build.sh') }}
+          key: kernel-${{ steps.submodule_hash.outputs.hash }}-${{ hashFiles('build_kernel.sh') }}
 
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
         run: |
           sudo apt update && sudo apt install \
-            build-essential libnuma-dev libcap-dev \
-            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
+            build-essential ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
       - name: Build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
-        run: ./build.sh
+        run: ./build_kernel.sh
 
       - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
@@ -90,9 +89,33 @@ jobs:
           name: kernel.tgz
           path: kernel.tgz
 
+  build-kselftests:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install apt packages for kselftest build
+        if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
+        run: |
+          sudo apt update && sudo apt install \
+            build-essential libnuma-dev libcap-dev libelf-dev
+
+      - name: Build
+        if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
+        run: ./build_kselftests.sh
+
+      - name: Upload kernel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kselftests.tgz
+          path: kselftests.tgz
+
   test:
     runs-on: ubuntu-24.04
-    needs: [build-rootfs, build-kernel]
+    needs: [build-rootfs, build-kernel, build-kselftests]
     steps:
       - name: Checkout virtme-ng
         uses: actions/checkout@v4
@@ -109,6 +132,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: kernel.tgz
+
+      - name: Download kselftests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kselftests.tgz
 
       - name: Install runtime dependencies
         id: apt-vng
