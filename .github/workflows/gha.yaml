@@ -14,12 +14,15 @@ jobs:
       # Install dependencies for virtme-ng
       - uses: awalsh128/cache-apt-pkgs-action@v1
         with:
+          # WARNING: When you change this, you need to manually update the
+          # version field below.
           packages: |
             build-essential libnuma-dev libcap-dev
             ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
 
             qemu-kvm udev iproute2 qemu-system-x86 python3-requests
             coreutils libvirt-clients kbd kmod file rsync zstd udev
+          version: 2
 
       - name: "Build kernel"
         run: |
