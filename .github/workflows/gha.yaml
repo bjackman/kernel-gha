@@ -117,7 +117,7 @@ jobs:
       - name: Run selftests via virtme-ng
         run: |
           virtme-ng/vng --verbose \
-            --root build/rootfs --user root --run build/arch/x86/boot/bzImage \
+            --root build/rootfs --user root --run build/vmlinuz \
             --rwdir=/mnt=build/kselftest/kselftest_install --
               "cd /mnt/mm; ./run_vmtests.sh -t mmap"
 
