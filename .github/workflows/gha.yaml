@@ -16,6 +16,7 @@ jobs:
       - uses: awalsh128/cache-apt-pkgs-action@v1
         with:
           # First group is kernel deps. Second is virtme-ng dep.
+          # apparmor is for the aa-teardown thing below.
           # WARNING: When you change this, you need to manually update the
           # version field below.
           packages: |
@@ -24,14 +25,16 @@ jobs:
 
             qemu-kvm udev iproute2 qemu-system-x86 python3-requests
             coreutils libvirt-clients kbd kmod file rsync zstd udev
-          version: 2
+
+            apparmor
+          version: 3
 
       - name: Build rootfs
         run: |
           # Enable mkosi to do userns stuff
           # https://github.com/actions/runner-images/issues/10015#issuecomment-2668163375
-          systemctl disable --now apparmor.service
-          aa-teardown || true
+          sudo systemctl disable --now apparmor.service
+          sudo aa-teardown || true
 
           mkosi/bin/mkosi
 
