@@ -4,3 +4,6 @@
 [submodule "virtme-ng"]
 	path = virtme-ng
 	url = https://github.com/arighi/virtme-ng
+[submodule "mkosi"]
+	path = mkosi
+	url = git@github.com:systemd/mkosi.git

@@ -25,6 +25,9 @@ jobs:
             coreutils libvirt-clients kbd kmod file rsync zstd udev
           version: 2
 
+      - name: Build rootfs
+        run: mkosi/bin/mkosi
+
       - name: Build kernel
         run: |
           cd linux/
@@ -38,6 +41,5 @@ jobs:
           # library environment between host & guest.
           make -j $(( $(nproc) * 2 )) -C tools/testing/selftests TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static install
 
-      # TODO: Get a rootfs
       # TODO: Run it
       # TODO: Create reproducer command
