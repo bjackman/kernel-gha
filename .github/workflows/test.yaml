@@ -85,9 +85,6 @@ jobs:
           submodules: true
           sparse-checkout: virtme-ng/
 
-      - name: create input-artfiacts directory
-        run: mkdir input-artifacts
-
       - name: Download rootfs artifact
         uses: actions/download-artifact@v4
         with:
