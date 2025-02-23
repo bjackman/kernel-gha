@@ -44,15 +44,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Install apt packages for kernel build
-        id: apt-kernel
-        uses: awalsh128/cache-apt-pkgs-action@v1
-        with:
-          packages: |
-            build-essential libnuma-dev libcap-dev
-            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
-          version: 3
-
       - name: Hash all submodule versions
         id: submodule_hash
         run: |
@@ -69,6 +60,16 @@ jobs:
         with:
           path: build
           key: ${{ runner.os }}-dependencies-${{ steps.submodule_hash.outputs.hash }}
+
+      - name: Install apt packages for kernel build
+        id: apt-kernel
+        if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: |
+            build-essential libnuma-dev libcap-dev
+            ncurses-dev xz-utils libssl-dev bc flex libelf-dev bison
+          version: 3
 
       - name: Build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
