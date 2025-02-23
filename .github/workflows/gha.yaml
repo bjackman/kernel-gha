@@ -12,7 +12,7 @@ jobs:
           submodules: false
 
       - name: Checkout mkosi
-        run: git submodule update mkosi/
+        run: git submodule update --init mkosi/
 
       - name: Install apt packages for mkosi
         id: apt-mkosi
@@ -59,7 +59,7 @@ jobs:
 
       - name: Checkout code
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
-        run: git submodule update
+        run: git submodule update --init
 
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
@@ -87,7 +87,7 @@ jobs:
           submodules: false
 
       - name: Checkout virtme-ng
-        run: git submodule update virtme-ng/
+        run: git submodule update --init virtme-ng/
 
       - name: Download rootfs artifact
         uses: actions/download-artifact@v4
