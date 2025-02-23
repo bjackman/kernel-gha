@@ -56,13 +56,5 @@ jobs:
           # library environment between host & guest.
           make -j $(( $(nproc) * 2 )) -C tools/testing/selftests TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static install
 
-      - name: Build mm selftests
-        run: |
-          cd linux
-          make -j headers
-          # -static is a simple way to workaround differences in the shared
-          # library environment between host & guest.
-          make -j $(( $(nproc) * 2 )) -C tools/testing/selftests TARGETS=mm KDIR=$PWD EXTRA_CFLAGS=-static install
-
       # TODO: Run it
       # TODO: Create reproducer command
