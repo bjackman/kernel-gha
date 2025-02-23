@@ -55,8 +55,8 @@ jobs:
         id: cache-kernel-build
         uses: actions/cache@v4
         with:
-          path: build
-          key: ${{ runner.os }}-dependencies-${{ steps.submodule_hash.outputs.hash }}-${{ hashFiles('build.sh') }}
+          path: kernel.tgz
+          key: ${{ runner.os }}-${{ steps.submodule_hash.outputs.hash }}-${{ hashFiles('build.sh') }}
 
       - name: Install apt packages for kernel build
         if: ${{ steps.cache-kernel-build.outputs.cache-hit != 'true' }}
